@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Intelligence Report — {{ date }}</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --green: #10b981;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --border: #2d2d44;
+    --card: #16162a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6; font-size: 15px;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a0a3e 0%, #0a1a3e 50%, #0a2a1a 100%);
+    padding: 2.5rem 2rem; border-bottom: 2px solid var(--accent);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .header h1 { font-size: 1.8rem; background: linear-gradient(135deg, #a855f7, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header .meta { color: var(--text2); font-size: 0.85rem; }
+  .header .status-badge { background: var(--accent); padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+  .section-title {
+    font-size: 1.2rem; font-weight: 700; padding: 0.8rem 1.2rem;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    border-left: 4px solid var(--accent); border-radius: 4px;
+    margin: 2rem 0 1rem; color: #c4b5fd;
+  }
+  .grid { display: grid; gap: 1rem; }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.2rem; transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card-title { font-size: 0.9rem; font-weight: 600; color: var(--accent2); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-value { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+  .card-sub { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
+  .tag {
+    display: inline-block; background: rgba(124,58,237,0.2); color: #a78bfa;
+    border: 1px solid rgba(124,58,237,0.4); border-radius: 20px;
+    padding: 0.2rem 0.8rem; font-size: 0.82rem; margin: 0.2rem;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .tag:hover { background: rgba(124,58,237,0.4); }
+  .tag.sound { background: rgba(6,182,212,0.2); color: #67e8f9; border-color: rgba(6,182,212,0.4); }
+  .niche-section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .niche-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .niche-title { font-size: 1.1rem; font-weight: 700; color: #e2e8f0; }
+  .score-badge {
+    padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #9333ea);
+  }
+  .ai-insight {
+    background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 10px; padding: 1rem; margin: 1rem 0;
+    font-size: 0.9rem; color: var(--text); line-height: 1.7;
+    white-space: pre-line;
+  }
+  .ai-insight::before { content: "🤖 KI-Analyse: "; font-weight: 700; color: #a78bfa; }
+  .video-idea {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem; margin: 0.6rem 0;
+  }
+  .video-idea-title { font-weight: 700; color: var(--accent2); margin-bottom: 0.5rem; }
+  .video-idea-row { font-size: 0.85rem; color: var(--text2); margin: 0.2rem 0; }
+  .video-idea-row strong { color: var(--text); }
+  .bundle-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem; margin: 0.6rem 0;
+  }
+  .bundle-name { font-weight: 700; color: #34d399; margin-bottom: 0.3rem; font-size: 0.9rem; }
+  .bundle-desc { font-size: 0.8rem; color: var(--text2); margin-bottom: 0.6rem; }
+  .bundle-copybox {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.6rem 0.8rem; font-family: monospace; font-size: 0.85rem;
+    color: #a78bfa; cursor: pointer; transition: border-color 0.2s; word-break: break-all;
+  }
+  .bundle-copybox:hover { border-color: var(--accent); }
+  .bundle-reach { font-size: 0.75rem; color: var(--text2); margin-top: 0.3rem; }
+  .calendar-item {
+    background: var(--surface2); border-left: 3px solid var(--border);
+    border-radius: 0 8px 8px 0; padding: 0.6rem 1rem; margin: 0.4rem 0;
+    font-size: 0.88rem;
+  }
+  .calendar-item.best { border-left-color: var(--green); }
+  .calendar-item.live { border-left-color: var(--red); }
+  .action-list { list-style: none; }
+  .action-list li {
+    padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+    font-size: 0.9rem; display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .action-list li::before { content: "→"; color: var(--accent); flex-shrink: 0; }
+  .top-video {
+    background: var(--surface2); border-radius: 8px; padding: 0.8rem;
+    margin: 0.4rem 0; font-size: 0.85rem;
+  }
+  .top-video .views { color: var(--green); font-weight: 700; font-size: 1rem; }
+  .top-video .desc { color: var(--text2); font-size: 0.8rem; margin-top: 0.2rem; }
+  .stat-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 0.5rem 0; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-label { font-size: 0.72rem; color: var(--text2); text-transform: uppercase; }
+  .stat-val { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+  .live-ratio {
+    display: flex; align-items: center; gap: 1rem; margin: 1rem 0;
+    background: var(--surface2); border-radius: 10px; padding: 1rem;
+  }
+  .live-ratio-number { font-size: 3rem; font-weight: 900; color: var(--yellow); }
+  .live-ratio-label { color: var(--text2); font-size: 0.85rem; }
+  .live-ratio-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background: rgba(239,68,68,0.2); color: var(--red); border: 1px solid rgba(239,68,68,0.4); }
+  .cause-item { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; padding: 0.6rem 0.8rem; margin: 0.4rem 0; font-size: 0.85rem; color: #fca5a5; }
+  .hook-script { background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; padding: 0.8rem; margin: 0.4rem 0; font-size: 0.88rem; color: #a5f3fc; font-style: italic; }
+  .copyable {
+    cursor: pointer; position: relative;
+    transition: opacity 0.2s;
+  }
+  .copyable:active { opacity: 0.7; }
+  .prompt-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin: 0.6rem 0; font-family: monospace; font-size: 0.82rem; color: #86efac; white-space: pre-wrap; word-break: break-word; }
+  .roadmap-item { padding: 0.5rem 0; font-size: 0.9rem; }
+  .footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem; margin-top: 3rem;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    color: var(--text2); font-size: 0.82rem;
+  }
+  .run-btn {
+    background: linear-gradient(135deg, var(--accent), #9333ea);
+    color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 20px;
+    cursor: pointer; font-size: 0.9rem; font-weight: 600;
+    text-decoration: none; display: inline-block;
+  }
+  .tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .tab-btn {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text2);
+    padding: 0.4rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .tab-btn.active, .tab-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  pre, code { white-space: pre-wrap; word-break: break-word; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🤖 TikTok Intelligence Report</h1>
+    <div class="meta">Erstellt am {{ date }} · {{ tiktok_username }}</div>
+    <div class="meta" style="margin-top:0.3rem">
+      📊 {{ total_videos_analyzed }} Videos analysiert ·
+      🔑 {{ niche_count }} Nischen ·
+      {{ api_status }}
+    </div>
+  </div>
+  <div style="text-align:right">
+    <div class="status-badge">🔄 Täglich aktualisiert</div>
+    <div class="meta" style="margin-top:0.5rem">Nächster Run: {{ next_run }}</div>
+    <div class="meta">KI-Kosten heute: {{ cost_estimate }}</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SECTION 1: Algorithm Pulse -->
+<div class="section-title">📈 Algorithm Pulse — Heute</div>
+<div class="grid grid-3">
+  <div class="card">
+    <div class="card-title">Top Hashtags Global</div>
+    {% for tag in global_hashtags[:8] %}
+    <span class="tag copyable" onclick="copyText(this, '{{ tag.tag }}')">{{ tag.tag }}</span>
+    {% endfor %}
+  </div>
+  <div class="card">
+    <div class="card-title">🎵 Trending Sounds</div>
+    {% for sound in trending_sounds[:5] %}
+    <div style="margin:0.3rem 0">
+      <span class="tag sound">{{ sound.name }}</span>
+      <span style="font-size:0.75rem;color:var(--text2)">{{ "{:,}".format(sound.usage_count) }} Uses</span>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="card">
+    <div class="card-title">⏱️ Optimale Video-Länge</div>
+    <div class="card-value">{{ optimal_duration }}</div>
+    <div class="card-sub">Sekunden — basierend auf viralen Videos</div>
+    <div style="margin-top:0.8rem;font-size:0.85rem;color:var(--text2)">
+      📅 Beste Posting-Tage: <strong style="color:var(--text)">Di, Do, Fr</strong>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: Niche Analyses -->
+<div class="section-title">🎯 Nischen-Analyse</div>
+
+<div class="tabs" id="nicheTabs">
+  {% for niche in niches %}
+  <button class="tab-btn {% if loop.first %}active{% endif %}" onclick="showNiche('{{ niche.id }}', this)">{{ niche.display_name }}</button>
+  {% endfor %}
+</div>
+
+{% for niche in niches %}
+<div id="niche-{{ niche.id }}" class="niche-section" {% if not loop.first %}style="display:none"{% endif %}>
+  <div class="niche-header">
+    <div class="niche-title">{{ niche.display_name }}</div>
+    <div class="score-badge">Viral Score: {{ niche.patterns.viral_score_avg }}/100</div>
+  </div>
+
+  <div class="grid grid-3" style="margin-bottom:1rem">
+    <div class="card">
+      <div class="card-title">Median Views</div>
+      <div class="card-value">{{ "{:,.0f}".format(niche.patterns.benchmarks.median_views) }}</div>
+      <div class="card-sub">in dieser Nische</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Engagement-Rate</div>
+      <div class="card-value">{{ "{:.1%}".format(niche.patterns.benchmarks.avg_engagement_rate) }}</div>
+      <div class="card-sub">Ø viral Videos</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Optimale Länge</div>
+      <div class="card-value">{{ niche.patterns.duration.optimal_min_seconds }}–{{ niche.patterns.duration.optimal_max_seconds }}s</div>
+      <div class="card-sub">{{ niche.patterns.duration.recommendation }}</div>
+    </div>
+  </div>
+
+  <div class="card-title">🔥 Virale Hashtags (Kopiere für dein nächstes Video)</div>
+  {% for tag in niche.patterns.top_hashtags %}
+  <span class="tag copyable" onclick="copyText(this, '{{ tag }}')">{{ tag }}</span>
+  {% endfor %}
+
+  {% if niche.patterns.top_sounds %}
+  <div style="margin-top:0.8rem">
+    <div class="card-title">🎵 Trending Sounds in deiner Nische</div>
+    {% for sound in niche.patterns.top_sounds[:3] %}
+    <span class="tag sound">{{ sound }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="ai-insight">{{ niche.analysis }}</div>
+
+  <!-- Video Ideas -->
+  {% if niche.ideas %}
+  <div class="card-title" style="margin-top:1rem">💡 Video-Ideen Diese Woche</div>
+  {% for idea in niche.ideas[:3] %}
+  <div class="video-idea">
+    <div class="video-idea-title">💡 {{ idea.title or "Video-Idee " + loop.index|string }}</div>
+    {% if idea.concept %}<div class="video-idea-row"><strong>Konzept:</strong> {{ idea.concept }}</div>{% endif %}
+    {% if idea.hook %}<div class="video-idea-row"><strong>Hook (erste 2 Sek.):</strong> <em style="color:#a5f3fc">"{{ idea.hook }}"</em></div>{% endif %}
+    {% if idea.caption_template %}<div class="video-idea-row"><strong>Caption-Template:</strong> {{ idea.caption_template }}</div>{% endif %}
+    {% if idea.production_time_estimate %}<div class="video-idea-row"><strong>Produktionszeit:</strong> {{ idea.production_time_estimate }}</div>{% endif %}
+    {% if idea.best_post_day %}<div class="video-idea-row"><strong>Bester Tag:</strong> {{ idea.best_post_day }}</div>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- Top Videos -->
+  {% if niche.patterns.top_videos %}
+  <div class="card-title" style="margin-top:1rem">🏆 Top-Videos in deiner Nische</div>
+  {% for v in niche.patterns.top_videos %}
+  <div class="top-video">
+    <div class="views">{{ "{:,.0f}".format(v.views) }} Views</div>
+    <div class="desc">{{ v.description }}</div>
+    <div class="stat-row" style="margin-top:0.4rem">
+      <div class="stat"><span class="stat-label">Dauer</span><span class="stat-val">{{ v.duration }}s</span></div>
+      <div class="stat"><span class="stat-label">Engagement</span><span class="stat-val">{{ v.engagement_rate }}%</span></div>
+      <div class="stat"><span class="stat-label">Sound</span><span class="stat-val">{{ v.sound }}</span></div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- Hashtag Bundles -->
+  {% if niche.bundles %}
+  <div class="card-title" style="margin-top:1rem">📦 Hashtag-Bundles (Klicken zum Kopieren)</div>
+  {% for bundle in niche.bundles %}
+  <div class="bundle-card">
+    <div class="bundle-name">{{ bundle.name }}</div>
+    <div class="bundle-desc">{{ bundle.description }}</div>
+    <div class="bundle-copybox copyable" onclick="copyText(this, '{{ bundle.copyable }}')">
+      {{ bundle.copyable }}
+    </div>
+    <div class="bundle-reach">📊 Geschätzte Reichweite: {{ bundle.estimated_reach }}</div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endfor %}
+
+<!-- SECTION 3: Upload Guide -->
+<div class="section-title">📤 Upload-Optimierungsguide</div>
+<div class="grid grid-2">
+  <div class="niche-section">
+    <div class="card-title">🎬 Video-Einstellungen</div>
+    <pre style="font-size:0.88rem;color:var(--text);line-height:1.8">{{ upload_guide.video_settings }}</pre>
+  </div>
+  <div class="niche-section">
+    <div class="card-title">✍️ Caption-Formel</div>
+    <pre style="font-size:0.88rem;color:var(--text);line-height:1.8">{{ upload_guide.caption_formula }}</pre>
+  </div>
+  <div class="niche-section">
+    <div class="card-title">🎵 Sound-Strategie</div>
+    <pre style="font-size:0.88rem;color:var(--text);line-height:1.8">{{ upload_guide.sound_tip }}</pre>
+  </div>
+  <div class="niche-section">
+    <div class="card-title">✅ Upload-Checkliste</div>
+    <pre style="font-size:0.88rem;color:var(--text);line-height:1.8">{{ upload_guide.posting_checklist }}</pre>
+  </div>
+</div>
+
+<!-- SECTION 4: Livestream -->
+<div class="section-title">🔴 Livestream-Optimierung</div>
+<div class="niche-section">
+  <div class="live-ratio">
+    <div class="live-ratio-number">{{ live_diagnosis.current_ratio_pct }}%</div>
+    <div>
+      <div style="font-weight:700;font-size:1.1rem">Viewer/Follower-Rate</div>
+      <div class="live-ratio-label">{{ live_diagnosis.current_ratio_pct }} Zuschauer von {{ follower_count }} Followern</div>
+      <div style="margin-top:0.3rem"><span class="live-ratio-badge">{{ live_diagnosis.benchmark_label }}</span></div>
+    </div>
+  </div>
+
+  <div class="card-title">🔍 Ursachen des Problems</div>
+  {% for cause in live_diagnosis.root_causes %}
+  <div class="cause-item">⚠️ {{ cause }}</div>
+  {% endfor %}
+
+  <div class="card-title" style="margin-top:1rem">✅ Aktionsplan (nach Impact sortiert)</div>
+  <ul class="action-list">
+    {% for action in live_diagnosis.action_plan %}
+    <li>{{ action }}</li>
+    {% endfor %}
+  </ul>
+
+  <div class="card-title" style="margin-top:1rem">📅 Optimaler Live-Zeitplan</div>
+  {% for time in live_diagnosis.best_live_times %}
+  <div class="calendar-item live">🔴 {{ time }}</div>
+  {% endfor %}
+
+  <div class="card-title" style="margin-top:1rem">🎤 Opening-Hooks (erste 30 Sekunden)</div>
+  {% for hook in live_diagnosis.opening_hooks %}
+  <div class="hook-script">"{{ hook }}"</div>
+  {% endfor %}
+
+  <div class="ai-insight">{{ live_advice }}</div>
+</div>
+
+<!-- SECTION 5: Calendar -->
+<div class="section-title">📅 7-Tage Content-Kalender</div>
+<div class="niche-section">
+  {% for day_line in calendar_lines %}
+  <div class="calendar-item {% if '🌟' in day_line %}best{% elif '🔴' in day_line %}live{% endif %}">
+    {{ day_line }}
+  </div>
+  {% endfor %}
+</div>
+
+<!-- SECTION 6: Trend Opportunities -->
+<div class="section-title">🚀 Trend-Opportunities</div>
+<div class="niche-section">
+  <div class="ai-insight">{{ trend_opportunities }}</div>
+</div>
+
+<!-- SECTION 7: Profile Optimization -->
+<div class="section-title">👤 Profil-Optimierung</div>
+<div class="niche-section">
+  <div class="ai-insight">{{ profile_advice }}</div>
+</div>
+
+<!-- SECTION 8: Brand Protection -->
+<div class="section-title">🛡️ Marken-Schutz & Visual-Konsistenz</div>
+<div class="niche-section">
+  <pre style="font-size:0.88rem;color:var(--text);line-height:1.9;white-space:pre-line">{{ brand_protection }}</pre>
+</div>
+
+<!-- SECTION 9: AI Prompt Library -->
+<div class="section-title">🔮 KI-Prompt-Bibliothek</div>
+<div class="niche-section">
+  <pre style="font-size:0.88rem;color:var(--text);line-height:1.9;white-space:pre-line">{{ prompt_recommendations }}</pre>
+</div>
+
+<!-- SECTION 10: Growth Roadmap -->
+<div class="section-title">📍 Wachstums-Roadmap</div>
+<div class="niche-section">
+  <pre style="font-size:0.88rem;color:var(--text);line-height:1.9;white-space:pre-line">{{ growth_roadmap }}</pre>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <div>
+    <div>Generiert: {{ date }} · TikTok AI Growth Intelligence System v1.0</div>
+    <div style="margin-top:0.3rem">KI-Modell: Claude · Datenquellen: TikTok API</div>
+    <div style="margin-top:0.3rem">KI-Kosten diese Session: {{ cost_estimate }}</div>
+  </div>
+  <div>
+    <div style="font-size:0.8rem;margin-bottom:0.5rem">Nächster automatischer Run: {{ next_run }}</div>
+  </div>
+</div>
+
+<script>
+function copyText(el, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = el.style.background;
+    el.style.background = 'rgba(16,185,129,0.4)';
+    setTimeout(() => { el.style.background = orig; }, 600);
+  });
+}
+function showNiche(id, btn) {
+  document.querySelectorAll('[id^="niche-"]').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('niche-' + id).style.display = '';
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
