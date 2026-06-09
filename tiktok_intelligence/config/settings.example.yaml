@@ -1,0 +1,115 @@
+# =====================================================
+# TikTok Growth Intelligence System — Konfiguration
+# Editiere diese Datei für deine persönlichen Einstellungen
+# =====================================================
+
+api_keys:
+  anthropic: ""        # Hole deinen Key: https://console.anthropic.com
+  rapidapi: ""         # Optional (kostenlos): https://rapidapi.com — leer lassen für kostenlosen Modus
+
+tiktok:
+  username: "@deinhandle"
+
+user:
+  timezone: "Europe/Berlin"
+  follower_count: 100
+  avg_live_viewers: 3.5
+  typical_live_duration_hours: 3
+
+niches:
+  - id: "ai-rap"
+    display_name: "KI-Rap Lyrics & Visuals"
+    description: "KI-generierte Rap-Texte mit KI-Bildern und Videos"
+    production_hours_per_video: 6
+    hashtag_seeds:
+      - "#airap"
+      - "#raplyrics"
+      - "#aimusic"
+      - "#aigenerated"
+      - "#artificialintelligence"
+    style_keywords:
+      - "AI-generated rap"
+      - "AI lyrics video"
+      - "AI music"
+    character_description: ""    # z.B. "KI-generierter Rapper in Neonlichtern"
+
+  - id: "ai-visuals"
+    display_name: "KI-Drachen & Visuals"
+    description: "KI-generierte Fantasy-Kreaturen und Kunstwerke"
+    production_hours_per_video: 4
+    hashtag_seeds:
+      - "#aiart"
+      - "#dragon"
+      - "#aiartwork"
+      - "#digitalart"
+      - "#fantasyart"
+    style_keywords:
+      - "AI dragon"
+      - "fantasy AI art"
+      - "AI creature"
+    character_description: ""    # z.B. "Fliegender Drache, episch, Midjourney-Stil"
+
+  - id: "ai-prompts"
+    display_name: "Einzigartige KI-Prompts"
+    description: "Prompts die nicht kopierbar sind aber viral gehen"
+    production_hours_per_video: 3
+    hashtag_seeds:
+      - "#aiprompts"
+      - "#midjourney"
+      - "#stablediffusion"
+      - "#promptengineering"
+    style_keywords:
+      - "unique AI prompt"
+      - "secret AI prompt"
+      - "AI art tutorial"
+    character_description: ""
+
+live_streaming:
+  typical_start_times:
+    - "20:00"
+    - "14:00"
+  typical_duration_hours: 3
+  current_avg_viewers: 3.5
+  goals:
+    - "Zuschauer von 3 auf 15 steigern"
+    - "Zuschauer in Follower umwandeln"
+
+schedule:
+  daily_run_time: "07:00"
+  timezone: "Europe/Berlin"
+  auto_open_report: true
+  keep_reports_days: 30
+
+reports:
+  format: "html"
+  output_dir: "./data/reports"
+  open_in_browser: true
+
+claude:
+  model: "claude-sonnet-4-6"
+  max_tokens: 4096
+
+analysis:
+  trending_videos_per_hashtag: 10
+  lookback_days: 7
+  viral_threshold_views: 50000
+
+growth_roadmap:
+  current_followers: 100
+  milestones:
+    - followers: 500
+      actions:
+        - "TikTok Creator-Fund beantragen"
+        - "Konsistenz: 5 Videos/Woche"
+    - followers: 1000
+      actions:
+        - "TikTok Creator-Marketplace freischalten"
+        - "Erste Kooperationen suchen"
+    - followers: 5000
+      actions:
+        - "Merch-Shop öffnen (Printful/Printify)"
+        - "KI-Art Prints verkaufen"
+    - followers: 10000
+      actions:
+        - "KI-Prompt-Pakete als digitale Produkte"
+        - "Kurs: 'KI-Content erstellen' verkaufen"

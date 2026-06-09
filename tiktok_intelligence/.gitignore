@@ -1,0 +1,8 @@
+data/cache/
+data/reports/
+config/settings.yaml
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
