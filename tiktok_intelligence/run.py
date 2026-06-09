@@ -211,9 +211,14 @@ def setup():
     console.print("\n[bold cyan]Schritt 4/4: Täglicher Report-Zeitpunkt[/bold cyan]")
     run_time = click.prompt("Wann soll der Report erstellt werden? (HH:MM)", default="07:00")
 
-    # Update settings.yaml
+    # Load from example template or existing file
     import yaml
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+    example_path = CONFIG_PATH.parent / "settings.example.yaml"
+    source_path = CONFIG_PATH if CONFIG_PATH.exists() else example_path
+    if not source_path.exists():
+        console.print("[red]❌ settings.example.yaml nicht gefunden. Bitte das ZIP neu entpacken.[/red]")
+        return
+    with open(source_path, "r", encoding="utf-8") as f:
         settings = yaml.safe_load(f)
 
     settings["api_keys"]["anthropic"] = api_key
